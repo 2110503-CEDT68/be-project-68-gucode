@@ -1,0 +1,4 @@
+# ignore all node_modules (มันมีขนาดใหญ่มาก + โหลดได้ทั่วไปตามเน็ต)
+node_modules/*
+# ignore config file (ใส่พวก username password)
+config/config.env
