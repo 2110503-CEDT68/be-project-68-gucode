@@ -8,7 +8,8 @@ const {
   deleteDentist
 } = require("../controllers/dentists");
 
-const bookingRouter = require("./bookings");
+//fix this from /.bookings to /.appointment becase is not find
+const bookingRouter = require("./appointments");
 
 const router = express.Router();
 
