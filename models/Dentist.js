@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const dentistSchema = new mongoose.Schema({
+const DentistSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please provide dentist name'],
@@ -26,6 +26,17 @@ const dentistSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+},{
+  toJSON: {virtuals: true},
+  toObject: {virtuals: true}
 });
 
-module.exports = mongoose.model('Dentist', dentistSchema);
+// Reverse Populate with Virtuals
+DentistSchema.virtual('bookings',{
+  ref: 'Booking',
+  localField: '_id',
+  foreignField: 'hospital',
+  justOne: false
+})
+
+module.exports = mongoose.model('Dentist', DentistSchema);

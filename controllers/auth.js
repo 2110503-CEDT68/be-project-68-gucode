@@ -1,18 +1,18 @@
 const User = require('../models/User');
 
 // @desc    Register User
-// @route   POST /api/dentistbooking/auth/register
+// @route   POST /api/auth/register
 // @access  Public
 exports.register = async(req, res, next)=>{
     try{
-        const {name, email, password, role} = req.body;
+        const {name, telephone, email, password, role} = req.body;
 
         // Create User
         const user = await User.create({
             name,
+            telephone,
             email,
             password,
-            tel,
             role
         });
         sendTokenResponse(user, 200, res);
@@ -23,7 +23,7 @@ exports.register = async(req, res, next)=>{
 };
 
 // @desc    Login User
-// @route   POST /api/dentistbooking/auth/login
+// @route   POST /api/auth/login
 // @access  Public
 exports.login = async(req, res, next) =>{
     try{
@@ -70,7 +70,7 @@ const sendTokenResponse = (user, statusCode, res)=>{
 };
 
 // @desc    Get Current Logged in User info
-// @route   GET /api/dentistbooking/auth/me
+// @route   GET /api/auth/me
 // @access  Private
 exports.getMe = async(req, res, next) =>{
     const user = await User.findById(req.user.id);
@@ -78,7 +78,7 @@ exports.getMe = async(req, res, next) =>{
 }
 
 // @desc    Logout User
-// @route   GET /api/dentistbooking/auth/logout
+// @route   GET /api/auth/logout
 // @access  Private
 exports.logout = async(req, res, next) =>{
     res.cookie('token','none',{ // Send new cookie to user with 'none'; or called as clear the client's cookie (because in middleware/auth.js also count 'none' as blank token)

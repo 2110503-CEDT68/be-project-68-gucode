@@ -8,15 +8,14 @@ const {
   deleteDentist
 } = require("../controllers/dentists");
 
-//fix this from /.bookings to /.appointment becase is not find
-const bookingRouter = require("./appointments");
+const bookingRouter = require("./bookings");
 
 const router = express.Router();
 
 const { protect, authorize } = require("../middleware/auth");
 
 // Nested route
-// /api/v1/dentists/:dentistId/bookings
+// /api/dentists/:dentistId/bookings
 router.use('/:dentistId/bookings', bookingRouter);
 
 

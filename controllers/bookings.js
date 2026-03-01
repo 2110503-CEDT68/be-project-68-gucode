@@ -2,9 +2,9 @@ const Booking = require('../models/Booking');
 const Dentist = require('../models/Dentist');
 
 
-//@desc Get all bookings
-//@route GET /api/v1/bookings
-//@access Private
+// @desc	Get all Bookings
+// @route	GET /api/bookings
+// @access	Private
 exports.getBookings = async (req,res,next)=>{
 	let query;
 
@@ -15,7 +15,7 @@ exports.getBookings = async (req,res,next)=>{
 			select:'name experience expertise'
 		});
 	}
-	else{
+	else{ // If is an Admin
 		query = Booking.find().populate({
 			path:'dentist',
 			select:'name experience expertise'
@@ -42,9 +42,9 @@ exports.getBookings = async (req,res,next)=>{
 
 
 
-//@desc Get single booking
-//@route GET /api/v1/bookings/:id
-//@access Private
+// @desc	Get single Booking
+// @route	GET /api/bookings/:id
+// @access	Private
 exports.getBooking = async (req,res,next)=>{
 	try{
 		const booking = await Booking.findById(req.params.id).populate({
@@ -75,21 +75,22 @@ exports.getBooking = async (req,res,next)=>{
 	catch(err){
 		res.status(500).json({
 			success:false,
-			message:"Cannot get booking"
+			message:"Cannot get this booking"
 		});
 	}
 };
 
 
 
-//@desc Create booking
-//@route POST /api/v1/dentists/:dentistId/bookings
-//@access Private
+// @desc	Create booking
+// @route	POST /api/dentists/:dentistId/bookings
+// @access	Private
 exports.createBooking = async (req,res,next)=>{
 	try{
 		req.body.dentist = req.params.dentistId;
 
 		const dentist = await Dentist.findById(req.params.dentistId);
+
 		if(!dentist){
 			return res.status(404).json({
 				success:false,
@@ -97,14 +98,15 @@ exports.createBooking = async (req,res,next)=>{
 			});
 		}
 
-		req.body.user = req.user.id;
+		req.body.user = req.user.id; // Add User ID to req.body (for Logic Control below: CAN ONLY HAVE ONE SESSION)
 
 		
 		const existedBooking = await Booking.findOne({user:req.user.id});
+
 		if(existedBooking && req.user.role !== 'admin'){
 			return res.status(400).json({
 				success:false,
-				message:"You already have a booking"
+				message:"You already have a booking."
 			});
 		}
 
@@ -118,16 +120,15 @@ exports.createBooking = async (req,res,next)=>{
 	catch(err){
 		res.status(500).json({
 			success:false,
-			message:"Cannot create booking"
+			message:"Cannot create this booking"
 		});
 	}
 };
 
 
-
-//@desc Update booking
-//@route PUT /api/v1/bookings/:id
-//@access Private
+// @desc	Update booking
+// @route	PUT /api/bookings/:id
+// @access 	Private
 exports.updateBooking = async (req,res,next)=>{
 	try{
 		let booking = await Booking.findById(req.params.id);
@@ -160,16 +161,16 @@ exports.updateBooking = async (req,res,next)=>{
 	catch(err){
 		res.status(500).json({
 			success:false,
-			message:"Cannot update booking"
+			message:"Cannot update this booking"
 		});
 	}
 };
 
 
 
-//@desc Delete booking
-//@route DELETE /api/v1/bookings/:id
-//@access Private
+// @desc	Delete booking
+// @route	DELETE /api/bookings/:id
+// @access	Private
 exports.deleteBooking = async (req,res,next)=>{
 	try{
 		const booking = await Booking.findById(req.params.id);
@@ -198,7 +199,7 @@ exports.deleteBooking = async (req,res,next)=>{
 	catch(err){
 		res.status(500).json({
 			success:false,
-			message:"Cannot delete booking"
+			message:"Cannot delete this booking"
 		});
 	}
 };

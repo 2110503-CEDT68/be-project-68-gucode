@@ -1,8 +1,18 @@
 const express = require('express');
 const dotenv = require('dotenv');
+// Sanitize Data
+const mongoSanitize = require('@exortek/express-mongo-sanitize');
+// XSS (Prevent Embeded Script Input)
+const {xss, sanitize} = require('express-xss-sanitizer');
+// HPP (Prevent duplicate parameters in URL Path)
+const hpp = require('hpp');
+// Cors (Access Resources across domain)
 const cors = require('cors');
+// Helmet (Enhanced Security (More Headers))
 const helmet = require('helmet');
+// Rare Limit (Limit access in 'max' variable within 'windowsMs' milliseconds)
 const rateLimit = require('express-rate-limit');
+
 const path = require('path');
 
 // Load config
@@ -10,21 +20,29 @@ dotenv.config({ path: './config/config.env' });
 
 // Import database
 const db = require('./config/db');
+// Connect to database
+db();
+
+// Cookie Parser
+const cookieParser = require('cookie-parser');
 
 // Import routes
 const authRoutes = require('./routes/auth');
 const dentistRoutes = require('./routes/dentists');
-const appointmentRoutes = require('./routes/appointments');
+const bookingRoutes = require('./routes/bookings');
 
 const app = express();
-
-// Connect to database
-db();
+app.use(express.json());
+app.use(cookieParser());
+app.set('query parser', 'extended');
 
 // Middleware
+app.use(mongoSanitize());
 app.use(helmet());
+app.use(xss());
 app.use(cors());
-app.use(express.json());
+app.use(hpp());
+
 app.use(express.urlencoded({ extended: true }));
 
 // Rate limiting
@@ -37,7 +55,7 @@ app.use('/api/', limiter);
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/dentists', dentistRoutes);
-app.use('/api/appointments', appointmentRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -56,8 +74,15 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5003;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) =>{
+    console.log(`Error: ${err.message}`);
+    // Close server & Exit Process
+    server.close(()=>process.exit(1));
 });
 
 module.exports = app;
