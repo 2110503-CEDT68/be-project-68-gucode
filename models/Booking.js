@@ -21,11 +21,6 @@ const bookingSchema = new mongoose.Schema({
       message: 'Booking date must be in the future'
     }
   },
-  status: {
-    type: String,
-    enum: ['pending', 'confirmed', 'cancelled', 'completed'],
-    default: 'pending'
-  },
   createdAt: {
     type: Date,
     default: Date.now

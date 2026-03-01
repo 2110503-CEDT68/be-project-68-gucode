@@ -18,10 +18,6 @@ const dentistSchema = new mongoose.Schema({
     trim: true,
     maxlength: [100, 'Area of expertise cannot be more than 100 characters']
   },
-  available: {
-    type: Boolean,
-    default: true
-  },
   createdAt: {
     type: Date,
     default: Date.now

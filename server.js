@@ -1,9 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const path = require('path');
+
 
 // Load config
 dotenv.config({ path: './config/config.env' });
@@ -23,7 +22,6 @@ db();
 
 // Middleware
 app.use(helmet());
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -59,5 +57,3 @@ const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
-
-module.exports = app;
