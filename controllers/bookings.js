@@ -64,15 +64,7 @@ exports.getBooking = async (req,res,next)=>{
 				message:`No booking with id ${req.params.id}`
 			});
 		}
-
-		// ตรวจสิทธิ์
-		if(booking.user.toString() !== req.user.id && req.user.role !== 'admin'){
-			return res.status(401).json({
-				success:false,
-				message:"Not authorized"
-			});
-		}
-
+		
 		res.status(200).json({
 			success:true,
 			data: booking
