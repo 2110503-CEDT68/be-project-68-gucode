@@ -19,6 +19,9 @@ exports.getBookings = async (req,res,next)=>{
 		query = Booking.find().populate({
 			path:'dentist',
 			select:'name experience expertise'
+		}).populate({
+			path:'user',
+			select: 'name telephone email'
 		});
 	}
 
@@ -50,6 +53,9 @@ exports.getBooking = async (req,res,next)=>{
 		const booking = await Booking.findById(req.params.id).populate({
 			path:'dentist',
 			select:'name experience expertise'
+		}).populate({
+			path:'user',
+			select: 'name telephone email'
 		});
 
 		if(!booking){
@@ -153,7 +159,13 @@ exports.updateBooking = async (req,res,next)=>{
 			req.params.id,
 			req.body,
 			{new:true, runValidators:true}
-		);
+		).populate({
+			path:'dentist',
+			select:'name experience expertise'
+		}).populate({
+			path:'user',
+			select: 'name telephone email'
+		});
 
 		res.status(200).json({
 			success:true,
@@ -196,6 +208,7 @@ exports.deleteBooking = async (req,res,next)=>{
 
 		res.status(200).json({
 			success:true,
+			message: "Deleted the booking successfully.",
 			data:{}
 		});
 	}
