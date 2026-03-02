@@ -1,18 +1,34 @@
 {
   "name": "dentist-booking-api",
   "version": "1.0.0",
+  "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/iG82Gnyy)",
+  "homepage": "https://github.com/2110503-CEDT68/be-project-68-gucode#readme",
+  "bugs": {
+    "url": "https://github.com/2110503-CEDT68/be-project-68-gucode/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2110503-CEDT68/be-project-68-gucode.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@exortek/express-mongo-sanitize": "^2.0.1",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^16.3.1",
     "express": "^4.22.1",
     "express-rate-limit": "^7.5.1",
+    "express-xss-sanitizer": "^2.0.1",
     "helmet": "^7.2.0",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "mongoose": "^8.23.0"
