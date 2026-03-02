@@ -1,26 +1,6 @@
 const User = require('../models/User');
+const axios = require('axios');
 
-// @desc    Register User
-// @route   POST /api/auth/register
-// @access  Public
-exports.register = async(req, res, next)=>{
-    try{
-        const {name, telephone, email, password, role} = req.body;
-
-        // Create User
-        const user = await User.create({
-            name,
-            telephone,
-            email,
-            password,
-            role
-        });
-        sendTokenResponse(user, 200, res);
-    }catch(err){
-        console.log(err.stack);
-        res.status(400).json({success: false});
-    }
-};
 
 // @desc    Login User
 // @route   POST /api/auth/login
@@ -47,6 +27,21 @@ exports.login = async(req, res, next) =>{
         }
 
         sendTokenResponse(user, 200, res);
+
+        // LINE MESSAGING API
+        const message = `⚠️แจ้งเตือน มีการเข้าสู่ระบบ
+
+เรียน ผู้ดูแลระบบ 
+
+มีการล็อกอินเข้าสู่ระบบด้วยบัญชี
+Username: ${user.name} 
+Email: ${user.email}
+
+เมื่อเวลา ${new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Bangkok'})} วันที่ ${new Date().toLocaleDateString('en-UK', {timeZone: 'Asia/Bangkok'})}
+
+ขอแสดงความนับถือ
+Gucode Group`;
+        await sendLineNotify(message);
     }catch(err){
         console.log(err.stack)
         return res.status(401).json({success: false, message: 'Cannot convert email or password to String'});
@@ -89,3 +84,45 @@ exports.logout = async(req, res, next) =>{
 
     res.status(200).json({success: true, message: 'Log out Successfully', data: {}});
 }
+
+// LINE NOTIFY FUNCTION
+const sendLineNotify = async(message) =>{
+    try{
+        const lineToken = process.env.LINE_BOT_TOKEN;
+        const userID = process.env.LINE_USER_ID;
+
+        await axios.post('https://api.line.me/v2/bot/message/push', {
+            to: userID,
+            messages: [{ type: 'text', text: message }]
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${lineToken}`
+            }
+        });
+    }catch(err){
+        console.log(err.stack);
+    }
+}
+
+// @desc    Register User
+// @route   POST /api/auth/register
+// @access  Public
+exports.register = async(req, res, next)=>{
+    try{
+        const {name, telephone, email, password, role} = req.body;
+
+        // Create User
+        const user = await User.create({
+            name,
+            telephone,
+            email,
+            password,
+            role
+        });
+        sendTokenResponse(user, 200, res);
+    }catch(err){
+        console.log(err.stack);
+        res.status(400).json({success: false});
+    }
+};

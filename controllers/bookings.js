@@ -212,4 +212,3 @@ exports.deleteBooking = async (req,res,next)=>{
 		});
 	}
 };
-//test
