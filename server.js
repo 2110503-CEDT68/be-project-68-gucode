@@ -1,5 +1,3 @@
-const { setServers } = require("node:dns/promises");
-setServers(["1.1.1.1", "8.8.8.8"]);
 
 const express = require('express');
 const dotenv = require('dotenv');
@@ -13,11 +11,6 @@ const {xss} = require('express-xss-sanitizer');
 const rateLimit = require('express-rate-limit');
 // HPP
 const hpp = require('hpp');
-// Cors
-const cors = require('cors');
-// Swagger Doc
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUI = require('swagger-ui-express');
 
 //Route files
 const dentists = require('./routes/dentists');
@@ -55,34 +48,11 @@ const limiter = rateLimit({
 app.use(limiter);
 // HPP (Prevent duplicate parameters in URL Path)
 app.use(hpp());
-// Cors (Access Resources across domain)
-app.use(cors());
-// Swagger Doc
-const swaggerOptions = {
-    swaggerDefinition:{
-        openapi: '3.0.0',
-        info:{
-            title: 'Library API',
-            version: '1.0.0',
-            description: 'A simple Express VacQ API'
-        },
-        // Add server URL; so that *try out* function of Swagger Doc can be used with real database!
-        servers:[
-            {
-                url: 'http://localhost:5003/api/v1'
-            }
-        ]
-    },
-    apis:['./routes/*.js']
-}
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // Mount
-app.use('/api/v1/dentists', dentists);
-app.use('/api/v1/auth', auth);
-app.use('/api/v1/bookings', bookings); //ต้องแก้ router 
+app.use('/api/dentists', dentists);
+app.use('/api/auth', auth);
+app.use('/api/bookings', bookings);
 
 const PORT = process.env.PORT || 5003;
 const server = app.listen(PORT, console.log('Server running in ', process.env.NODE_ENV, ' mode on port ', PORT));

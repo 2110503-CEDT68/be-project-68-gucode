@@ -1,20 +1,18 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { unique } = require('underscore');
-const { MAX_LENGTH } = require('picomatch/lib/constants');
 
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Please add a name'],
+        unique: true,
         maxlength: [50,'Name cannot be more then 50 charector']
     },
     telephoneNumber:{
         type: String,
         required: [true, 'Please add telephone number'],
-        unique: true,
-        maxlenght: [10] //like this 0660006666
+        maxlength: [10] //like this 0660006666
     },
     email:{
         type: String,
@@ -45,7 +43,7 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre('save', async function(next){
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-})
+});
 
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function(){
