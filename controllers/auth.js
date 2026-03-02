@@ -36,7 +36,7 @@ exports.login = async(req, res, next) =>{
 
         // Check for email
         const user = await User.findOne({email}).select('+password'); // if found user, then also gather the password field
-        if(!uesr){ // No email was found in the database
+        if(!user){ // No email was found in the database
             return res.status(400).json({success: false, message: 'Invalid Credentials'});
         }
 
@@ -48,6 +48,7 @@ exports.login = async(req, res, next) =>{
 
         sendTokenResponse(user, 200, res);
     }catch(err){
+        console.log(err.stack)
         return res.status(401).json({success: false, message: 'Cannot convert email or password to String'});
     }
 }
