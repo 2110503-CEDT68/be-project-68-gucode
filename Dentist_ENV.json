@@ -1,0 +1,34 @@
+{
+	"id": "adb46132-54ae-4e03-9d35-5fd26e7c11f0",
+	"name": "Dentist",
+	"values": [
+		{
+			"key": "URL",
+			"value": "http://localhost:5003",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "TOKEN",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YTU1YWQzODI3YjRmMTc4NTIzMDFiZSIsImlhdCI6MTc3MjQ0NDM3MSwiZXhwIjoxNzc1MDM2MzcxfQ.qPPX9icaLWg0FdkmK3BXnvx7nyFibwqrEGerFUztzPE",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "DentID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "BookID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-03-02T13:24:10.584Z",
+	"_postman_exported_using": "Postman/11.86.5"
+}
