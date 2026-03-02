@@ -18,7 +18,7 @@ router.route('/')
 									// ???
 // POST create booking
 // /api/dentists/:dentistId/bookings
-router.route('/:dentistId')
+router.route('/')
 	.post(protect, createBooking);
 
 // GET single booking
