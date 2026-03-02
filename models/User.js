@@ -9,9 +9,9 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         maxlength: [50,'Name cannot be more then 50 charector']
     },
-    telephoneNumber:{
+    telephone:{
         type: String,
-        required: [true, 'Please add telephone number'],
+        required: [true, 'Please add a telephone number'],
         maxlength: [10] //like this 0660006666
     },
     email:{
