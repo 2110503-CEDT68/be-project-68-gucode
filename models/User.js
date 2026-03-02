@@ -1,53 +1,62 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { unique } = require('underscore');
+const { MAX_LENGTH } = require('picomatch/lib/constants');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please provide a name'],
-    trim: true,
-    maxlength: [50, 'Name cannot be more than 50 characters']
-  },
-  telephone: {
-    type: String,
-    required: [true, 'Please provide a telephone number'],
-    trim: true,
-    maxlength: [10, 'Telephone number cannot be more than 20 characters']
-  },
-  email: {
-    type: String,
-    required: [true, 'Please provide an email'],
-    unique: true,
-    lowercase: true,
-    trim: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email']
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-    minlength: [6, 'Password must be at least 6 characters'],
-    select: false
-  },
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'Please add a name'],
+        maxlenght: [50,'Name cannot be more then 50 charector']
+    },
+    telephoneNumber:{
+        type: String,
+        required: [true, 'Please add telephone number'],
+        unique: true,
+        maxlenght: [10] //like this 0660006666
+    },
+    email:{
+        type: String,
+        required: [true, 'Please add an email'],
+        unique: true,
+        match:[
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-9]+\.)+[a-zA-Z]{2,}))$/, 'Please add a valid email'
+        ]
+    },
+    role:{
+        type:String,
+        enum:['user','admin'],
+        default: 'user'
+    },
+    password:{
+        type: String,
+        required: [true, 'Please add a password'],
+        minlength: 6,
+        select: false
+    },
+    createAt:{
+        type: Date,
+        default: Date.now
+    }
 });
 
-// Hash password before saving
-userSchema.pre('save', async function(next) {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
+// Encrypt a password using bcrypt
+UserSchema.pre('save', async function(next){
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+})
 
-// Method to compare password
-userSchema.methods.matchPassword = async function(enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
+// Sign JWT and return
+UserSchema.methods.getSignedJwtToken = function(){
+    return jwt.sign({id: this._id}, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE
+    });
+}
 
-module.exports = mongoose.model('User', userSchema);
+// Match user entered password to hashed password in database
+UserSchema.methods.matchPassword = async function(enteredPassword){
+    return await bcrypt.compare(enteredPassword, this.password);
+}
+
+module.exports = mongoose.model('User', UserSchema);
