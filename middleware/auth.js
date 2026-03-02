@@ -6,7 +6,7 @@ exports.protect = async(req,res,next)=>{
     let token;
 
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
-        token = req.headers.split(' ')[1]; // "Bearer xxxx" --> Collect xxx to token
+        token = req.headers.authorization.split(' ')[1]; // "Bearer xxxx" --> Collect xxx to token
     }
 
     // Make sure the token is filled
