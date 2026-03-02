@@ -1482,7 +1482,7 @@
           "response": []
         },
         {
-          "name": "12 Admin Update Booking",
+          "name": "12 Admin Delete Booking",
           "event": [
             {
               "listen": "test",
