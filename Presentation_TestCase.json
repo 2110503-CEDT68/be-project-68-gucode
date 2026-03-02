@@ -1495,7 +1495,9 @@
                   "pm.test(\"Admin Deleted Booking\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData.success).to.eql(true);",
-                  "});"
+                  "});",
+                  "",
+                  "pm.execution.setNextRequest(\"Auto Delete Dentist\")"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1541,6 +1543,64 @@
                 "api",
                 "bookings",
                 "{{BookID}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auto Delete Dentist",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": "JSON Type",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/api/dentists/{{DentID}}",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "api",
+                "dentists",
+                "{{DentID}}"
               ]
             }
           },
