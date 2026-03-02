@@ -74,6 +74,7 @@ exports.getDentists = async (req,res,next) => {
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(500).json({
 			success:false,
 			message: "Cannot get dentists"
@@ -104,6 +105,7 @@ exports.getDentist = async (req,res,next)=>{
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(500).json({
 			success:false,
 			message:"Cannot get dentist"
@@ -127,6 +129,7 @@ exports.createDentist = async (req,res,next)=>{
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(400).json({
 			success:false,
 			message:"Cannot create dentist"
@@ -161,6 +164,7 @@ exports.updateDentist = async (req,res,next)=>{
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(400).json({
 			success:false,
 			message:"Cannot update dentist"
@@ -195,6 +199,7 @@ exports.deleteDentist = async (req,res,next)=>{
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(500).json({
 			success:false,
 			message:"Cannot delete dentist"

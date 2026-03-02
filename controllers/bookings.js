@@ -73,6 +73,7 @@ exports.getBooking = async (req,res,next)=>{
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(500).json({
 			success:false,
 			message:"Cannot get this booking"
@@ -118,6 +119,7 @@ exports.createBooking = async (req,res,next)=>{
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(500).json({
 			success:false,
 			message:"Cannot create this booking"
@@ -159,6 +161,7 @@ exports.updateBooking = async (req,res,next)=>{
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(500).json({
 			success:false,
 			message:"Cannot update this booking"
@@ -197,6 +200,7 @@ exports.deleteBooking = async (req,res,next)=>{
 		});
 	}
 	catch(err){
+		console.log(err.stack);
 		res.status(500).json({
 			success:false,
 			message:"Cannot delete this booking"
