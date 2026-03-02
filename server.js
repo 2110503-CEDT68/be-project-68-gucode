@@ -43,7 +43,7 @@ app.use(xss());
 // Rate Limiting (Limit access in max variable within windowsMs milliseconds)
 const limiter = rateLimit({
     windowMs: 10*60*1000, // 10 mins
-    max: 100
+    max: 100000
 });
 app.use(limiter);
 // HPP (Prevent duplicate parameters in URL Path)

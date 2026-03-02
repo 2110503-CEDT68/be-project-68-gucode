@@ -64,7 +64,7 @@ exports.getBooking = async (req,res,next)=>{
 				message:`No booking with id ${req.params.id}`
 			});
 		}
-		
+
 		res.status(200).json({
 			success:true,
 			data: booking
@@ -100,9 +100,9 @@ exports.createBooking = async (req,res,next)=>{
 		req.body.user = req.user.id; // Add User ID to req.body (for Logic Control below: CAN ONLY HAVE ONE SESSION)
 
 		
-		const existedBooking = await Booking.findOne({user:req.user.id});
+		const existedBooking = await Booking.find({user:req.user.id});
 
-		if(existedBooking && req.user.role !== 'admin'){
+		if(existedBooking.length >= 1 && req.user.role !== 'admin'){
 			return res.status(400).json({
 				success:false,
 				message:"You already have a booking."
