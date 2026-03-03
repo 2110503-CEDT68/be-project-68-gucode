@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please add a name'],
         unique: true,
-        maxlength: [50,'Name cannot be more then 50 charector']
+        maxlength: [50,'Name cannot be more than 50 charecter']
     },
     telephone:{
         type: String,
@@ -33,6 +33,8 @@ const UserSchema = new mongoose.Schema({
         minlength: 6,
         select: false
     },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
     createAt:{
         type: Date,
         default: Date.now
