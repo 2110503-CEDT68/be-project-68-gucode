@@ -102,7 +102,7 @@ exports.createBooking = async (req,res,next)=>{
 		
 		const existedBooking = await Booking.find({user:req.user.id});
 
-		if(existedBooking.length >= 1 && req.user.role !== 'admin'){
+		if(existedBooking.length >= 1){ // Admin can also book only 1 session for themselves.
 			return res.status(400).json({
 				success:false,
 				message:"You already have a booking."

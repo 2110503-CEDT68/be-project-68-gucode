@@ -17,7 +17,7 @@ const DentistSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide area of expertise'],
         trim: true,
-        maxlength: [100,'Area of expertise cannot be more than 100 charecters']
+        maxlength: [100,'Area of expertise cannot be more than 100 characters']
     },
     createAt: {
         type: Date,

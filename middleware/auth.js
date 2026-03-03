@@ -10,7 +10,7 @@ exports.protect = async(req,res,next)=>{
     }
 
     // Make sure the token is filled
-    if(!token || token == 'null'){
+    if(!token || token == 'none'){
         return res.status(401).json({success: false, message: 'Not authorize to access this route'});
     }
 

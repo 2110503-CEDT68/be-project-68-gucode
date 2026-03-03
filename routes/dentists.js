@@ -8,7 +8,7 @@ const {
   deleteDentist
 } = require("../controllers/dentists");
 
-const bookingRouter = require("./bookings");
+const bookings = require("./bookings");
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ const { protect, authorize } = require("../middleware/auth");
 
 // Nested route
 // /api/dentists/:dentistId/bookings
-router.use('/:dentistId/bookings', bookingRouter);
+router.use('/:dentistId/bookings', bookings);
 
 
 // GET all dentists
