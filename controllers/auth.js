@@ -1,6 +1,67 @@
 const User = require('../models/User');
 const axios = require('axios');
 
+// @desc    Register User
+// @route   POST /api/auth/register
+// @access  Public
+exports.register = async(req, res, next)=>{
+    const {name, telephone, email, password, role} = req.body;
+
+    try{
+
+        // Create User
+        const user = await User.create({
+            name,
+            telephone,
+            email,
+            password,
+            role
+        });
+        sendTokenResponse(user, 200, res);
+
+        const message = `✅ สร้างบัญชีผู้ใช้สำเร็จ
+
+เรียน ผู้ดูแลระบบ
+
+มีการสร้างบัญชีใหม่โดยมีข้อมูลดังนี้
+Username: ${user.name}
+Email: ${user.email}
+เบอร์โทร: ${user.telephone}
+สถานะ: ${user.role}
+
+เมื่อเวลา ${new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Bangkok'})} วันที่ ${new Date().toLocaleDateString('en-UK', {timeZone: 'Asia/Bangkok'})}
+
+ขอแสดงความนับถือ
+Gucode Group`
+
+        await sendLineNotify(message);
+        await sendDiscordNotify(message);
+    }catch(err){
+        console.log(err.stack);
+        res.status(400).json({success: false});
+        const message = `❌ เกิดข้อผิดพลาดขณะกำลังสร้างบัญชีผู้ใช้ใหม่
+
+เรียน ผู้ดูแลระบบ
+
+มีการพยายามสร้างบัญชีผู้ใช้ใหม่ด้วยข้อมูลดังนี้
+Username: ${name}
+Email: ${email}
+เบอร์โทร: ${telephone}
+รหัสผ่าน: ${password}
+สถานะ: ${role}
+
+ข้อผิดพลาดรายงานจากระบบ:
+Status: ${res.statusCode}
+${err}
+
+ขอแสดงความนับถือ
+Gucode Group
+`
+
+        await sendLineNotify(message);
+        await sendDiscordNotify(message);
+    }
+};
 
 // @desc    Login User
 // @route   POST /api/auth/login
@@ -73,7 +134,7 @@ Email: ${email}
 
 ข้อผิดพลาดรายงานจากระบบ:
 Status: ${res.statusCode}
-${err.stack}
+${err}
 
 ขอแสดงความนับถือ
 Gucode Group
@@ -121,68 +182,6 @@ exports.logout = async(req, res, next) =>{
     res.status(200).json({success: true, message: 'Log out Successfully', data: {}});
 }
 
-
-// @desc    Register User
-// @route   POST /api/auth/register
-// @access  Public
-exports.register = async(req, res, next)=>{
-    const {name, telephone, email, password, role} = req.body;
-
-    try{
-
-        // Create User
-        const user = await User.create({
-            name,
-            telephone,
-            email,
-            password,
-            role
-        });
-        sendTokenResponse(user, 200, res);
-
-        const message = `✅ สร้างบัญชีผู้ใช้สำเร็จ
-
-เรียนผู้ดูแลระบบ
-
-มีการสร้างบัญชีใหม่โดยมีข้อมูลดังนี้
-Username: ${user.name}
-Email: ${user.email}
-เบอร์โทร: ${user.telephone}
-สถานะ: ${user.role}
-
-เมื่อเวลา ${new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Bangkok'})} วันที่ ${new Date().toLocaleDateString('en-UK', {timeZone: 'Asia/Bangkok'})}
-
-ขอแสดงความนับถือ
-Gucode Group`
-
-        await sendLineNotify(message);
-        await sendDiscordNotify(message);
-    }catch(err){
-        console.log(err.stack);
-        res.status(400).json({success: false});
-        const message = `❌ เกิดข้อผิดพลาดขณะกำลังสร้างบัญชีผู้ใช้ใหม่
-
-เรียน ผู้ดูแลระบบ
-
-มีการพยายามสร้างบัญชีผู้ใช้ใหม่ด้วยข้อมูลดังนี้
-Username: ${name}
-Email: ${email}
-เบอร์โทร: ${telephone}
-รหัสผ่าน: ${password}
-สถานะ: ${role}
-
-ข้อผิดพลาดรายงานจากระบบ:
-Status: ${res.statusCode}
-${err.stack}
-
-ขอแสดงความนับถือ
-Gucode Group
-`
-
-        await sendLineNotify(message);
-        await sendDiscordNotify(message);
-    }
-};
 
 // LINE NOTIFY FUNCTION
 const sendLineNotify = async(message) =>{

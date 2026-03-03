@@ -3,7 +3,7 @@ const Booking = require('../models/Booking');
 
 
 // @desc	Get all dentists
-// @route	GET /api/v1/dentists
+// @route	GET /api/dentists
 // @access	Public
 exports.getDentists = async (req,res,next) => {
 	let query;
@@ -72,8 +72,7 @@ exports.getDentists = async (req,res,next) => {
 			pagination,
 			data: dentists
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(500).json({
 			success:false,
@@ -85,7 +84,7 @@ exports.getDentists = async (req,res,next) => {
 
 
 // @desc	Get single dentist
-// @route	GET /api/v1/dentists/:id
+// @route	GET /api/dentists/:id
 // @access	Public
 exports.getDentist = async (req,res,next)=>{
 
@@ -103,8 +102,7 @@ exports.getDentist = async (req,res,next)=>{
 			success:true,
 			data: dentist
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(500).json({
 			success:false,
@@ -116,7 +114,7 @@ exports.getDentist = async (req,res,next)=>{
 
 
 // @desc	Create a new dentist
-// @route	POST /api/v1/dentists
+// @route	POST /api/dentists
 // @access	Private (Admin only)
 exports.createDentist = async (req,res,next)=>{
 
@@ -127,8 +125,7 @@ exports.createDentist = async (req,res,next)=>{
 			success:true,
 			data: dentist
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(400).json({
 			success:false,
@@ -140,7 +137,7 @@ exports.createDentist = async (req,res,next)=>{
 
 
 // @desc	Update dentist
-// @route	PUT /api/v1/dentists/:id
+// @route	PUT /api/dentists/:id
 // @access	Private (Admin only)
 exports.updateDentist = async (req,res,next)=>{
 
@@ -162,8 +159,7 @@ exports.updateDentist = async (req,res,next)=>{
 			success:true,
 			data: dentist
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(400).json({
 			success:false,
@@ -175,7 +171,7 @@ exports.updateDentist = async (req,res,next)=>{
 
 
 // @desc	Delete dentist
-// @route	DELETE /api/v1/dentists/:id
+// @route	DELETE /api/dentists/:id
 // @access	Private (Admin only)
 exports.deleteDentist = async (req,res,next)=>{
 
@@ -197,8 +193,7 @@ exports.deleteDentist = async (req,res,next)=>{
 			success:true,
 			data:{}
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(500).json({
 			success:false,

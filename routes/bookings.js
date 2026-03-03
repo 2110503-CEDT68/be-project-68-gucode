@@ -14,8 +14,7 @@ const { protect } = require('../middleware/auth');
 // GET all bookings
 router.route('/')
 	.get(protect, getBookings);
-
-									// ???
+								
 // POST create booking
 // /api/dentists/:dentistId/bookings
 router.route('/')

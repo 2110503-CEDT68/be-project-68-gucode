@@ -1,8 +1,8 @@
 const express = require("express");
 
 const {
-  getDentist,
   getDentists,
+  getDentist,
   createDentist,
   updateDentist,
   deleteDentist

@@ -12,13 +12,15 @@ exports.getBookings = async (req,res,next)=>{
 	if(req.user.role !== 'admin'){
 		query = Booking.find({user:req.user.id}).populate({
 			path:'dentist',
-			select:'name experience expertise'
+			select:'name yearsOfExperience areaOfExpertise'
+		}).populate({
+			path:'user',
+			select: 'name telephone email'
 		});
-	}
-	else{ // If is an Admin
+	}else{ // If is an Admin
 		query = Booking.find().populate({
 			path:'dentist',
-			select:'name experience expertise'
+			select:'name yearsOfExperience areaOfExpertise'
 		}).populate({
 			path:'user',
 			select: 'name telephone email'
@@ -33,8 +35,7 @@ exports.getBookings = async (req,res,next)=>{
 			count: bookings.length,
 			data: bookings
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(500).json({
 			success:false,
@@ -52,7 +53,7 @@ exports.getBooking = async (req,res,next)=>{
 	try{
 		const booking = await Booking.findById(req.params.id).populate({
 			path:'dentist',
-			select:'name experience expertise'
+			select:'name yearsOfExperience areaOfExpertise'
 		}).populate({
 			path:'user',
 			select: 'name telephone email'
@@ -69,8 +70,7 @@ exports.getBooking = async (req,res,next)=>{
 			success:true,
 			data: booking
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(500).json({
 			success:false,
@@ -97,7 +97,7 @@ exports.createBooking = async (req,res,next)=>{
 			});
 		}
 
-		req.body.user = req.user.id; // Add User ID to req.body (for Logic Control below: CAN ONLY HAVE ONE SESSION)
+		req.body.user = req.user.id; // Add User ID to req.body use to create Booking
 
 		
 		const existedBooking = await Booking.find({user:req.user.id});
@@ -115,8 +115,7 @@ exports.createBooking = async (req,res,next)=>{
 			success:true,
 			data: booking
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(500).json({
 			success:false,
@@ -153,7 +152,7 @@ exports.updateBooking = async (req,res,next)=>{
 			{new:true, runValidators:true}
 		).populate({
 			path:'dentist',
-			select:'name experience expertise'
+			select:'name yearsOfExperience areaOfExpertise'
 		}).populate({
 			path:'user',
 			select: 'name telephone email'
@@ -163,8 +162,7 @@ exports.updateBooking = async (req,res,next)=>{
 			success:true,
 			data: booking
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(500).json({
 			success:false,
@@ -203,8 +201,7 @@ exports.deleteBooking = async (req,res,next)=>{
 			message: "Deleted the booking successfully.",
 			data:{}
 		});
-	}
-	catch(err){
+	}catch(err){
 		console.log(err.stack);
 		res.status(500).json({
 			success:false,
