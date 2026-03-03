@@ -191,7 +191,10 @@ const sendLineNotify = async(message) =>{
 
         await axios.post('https://api.line.me/v2/bot/message/push', {
             to: userID,
-            messages: [{ type: 'text', text: message }]
+            messages: [{ type: 'text', text: message },
+                {type:'sticker',packageId: '446', stickerId: '1988'},
+                {type: 'text', text: '$_$', emojis: [{index: 2, type:'emojis',productId: '670e0cce840a8236ddd4ee4c', emojiId: '001'},{index:0,type:'emojis',productId:'670e0cce840a8236ddd4ee4c',emojiId:'007'}]}
+            ]
         }, {
             headers: {
                 'Content-Type': 'application/json',
