@@ -6,8 +6,9 @@ const axios = require('axios');
 // @route   POST /api/auth/login
 // @access  Public
 exports.login = async(req, res, next) =>{
+    const {email, password} = req.body;
+
     try{
-        const {email, password} = req.body;
 
         // Validate email & password
         if(!email || !password){ // No email or password is entered
@@ -23,13 +24,29 @@ exports.login = async(req, res, next) =>{
         // Check for password
         const isMatch = await user.matchPassword(password);
         if(!isMatch){ // Wrong password
+            const message = `🚨แจ้งเตือน มีการพยายามเข้าสู่ระบบ
+
+เรียน ผู้ดูแลระบบ
+
+มีการพยายามล็อกอินด้วยข้อมูลดังนี้
+Email: ${email}
+รหัสผ่าน: ${password}
+เมื่อเวลา ${new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Bangkok'})} วันที่ ${new Date().toLocaleDateString('en-UK', {timeZone: 'Asia/Bangkok'})}
+
+⚠️ โปรดระมัดระวังการเข้าถึงโดยมิจฉาชีพ
+
+ขอแสดงความนับถือ
+Gucode Group
+`
+
+            await sendLineNotify(message);
+            await sendDiscordNotify(message);
             return res.status(400).json({success: false, message: 'Invalid Credentials'});
         }
 
         sendTokenResponse(user, 200, res);
 
-        // NOTIFY MESSAGING API
-        const message = `⚠️แจ้งเตือน มีการเข้าสู่ระบบ
+        const message = `⚠️แจ้งเตือน มีการเข้าสู่ระบบสำเร็จ ✅
 
 เรียน ผู้ดูแลระบบ 
 
@@ -45,7 +62,25 @@ Gucode Group`;
         await sendDiscordNotify(message);
     }catch(err){
         console.log(err.stack)
-        return res.status(401).json({success: false, message: 'Cannot convert email or password to String'});
+        res.status(401).json({success: false, message: 'Cannot convert email or password to String'});
+        const message = `❌ เกิดข้อผิดพลาดขณะกำลัง Login
+
+เรียน ผู้ดูแลระบบ
+
+มีการพยายามล็อกอินด้วยข้อมูลดังนี้
+Email: ${email}
+รหัสผ่าน: ${password}
+
+ข้อผิดพลาดรายงานจากระบบ:
+Status: ${res.statusCode}
+${err.stack}
+
+ขอแสดงความนับถือ
+Gucode Group
+`
+
+        await sendLineNotify(message);
+        await sendDiscordNotify(message);
     }
 }
 
@@ -91,8 +126,9 @@ exports.logout = async(req, res, next) =>{
 // @route   POST /api/auth/register
 // @access  Public
 exports.register = async(req, res, next)=>{
+    const {name, telephone, email, password, role} = req.body;
+
     try{
-        const {name, telephone, email, password, role} = req.body;
 
         // Create User
         const user = await User.create({
@@ -103,9 +139,48 @@ exports.register = async(req, res, next)=>{
             role
         });
         sendTokenResponse(user, 200, res);
+
+        const message = `✅ สร้างบัญชีผู้ใช้สำเร็จ
+
+เรียนผู้ดูแลระบบ
+
+มีการสร้างบัญชีใหม่โดยมีข้อมูลดังนี้
+Username: ${user.name}
+Email: ${user.email}
+เบอร์โทร: ${user.telephone}
+สถานะ: ${user.role}
+
+เมื่อเวลา ${new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Bangkok'})} วันที่ ${new Date().toLocaleDateString('en-UK', {timeZone: 'Asia/Bangkok'})}
+
+ขอแสดงความนับถือ
+Gucode Group`
+
+        await sendLineNotify(message);
+        await sendDiscordNotify(message);
     }catch(err){
         console.log(err.stack);
         res.status(400).json({success: false});
+        const message = `❌ เกิดข้อผิดพลาดขณะกำลังสร้างบัญชีผู้ใช้ใหม่
+
+เรียน ผู้ดูแลระบบ
+
+มีการพยายามสร้างบัญชีผู้ใช้ใหม่ด้วยข้อมูลดังนี้
+Username: ${name}
+Email: ${email}
+เบอร์โทร: ${telephone}
+รหัสผ่าน: ${password}
+สถานะ: ${role}
+
+ข้อผิดพลาดรายงานจากระบบ:
+Status: ${res.statusCode}
+${err.stack}
+
+ขอแสดงความนับถือ
+Gucode Group
+`
+
+        await sendLineNotify(message);
+        await sendDiscordNotify(message);
     }
 };
 
